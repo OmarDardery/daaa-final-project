@@ -1,0 +1,21 @@
+This is a sample document for testing the text search engine.
+
+The quick brown fox jumps over the lazy dog. The fox is very quick and agile.
+This sentence contains the word "fox" multiple times. Let's see if the search algorithms can find all occurrences of "fox" in this document.
+
+Lorem ipsum dolor sit amet, consectetur adipiscing elit. The fox runs through the forest.
+Pattern matching is an important concept in computer science. The algorithms we're testing include:
+1. Brute Force - a simple but effective approach
+2. Boyer-Moore - uses clever heuristics to skip sections
+3. Knuth-Morris-Pratt - uses a prefix function for efficiency
+
+The fox is mentioned several times in this document to test multiple matches.
+Another fox appears here!
+
+Test various patterns:
+- Short patterns: "the", "fox", "is"
+- Longer patterns: "algorithms", "computer science"
+- Case sensitivity: "The" vs "the"
+- Edge cases: patterns at the start, middle, and end of the document
+
+This document ends with the word fox.
