@@ -23,7 +23,7 @@
  */
 // eslint-disable-next-line no-unused-vars
 export function bruteForceSearch(text, pattern) {
-  // TODO: implement brute force search; return all match start indices
+  // implement brute force search; return all match start indices
   return { matches: [], comparisons: 0, timeElapsed: 0 };
 }
 
@@ -39,10 +39,90 @@ export function bruteForceSearch(text, pattern) {
  * - Record each match start index in `matches`.
  * - Measure execution time with performance.now().
  */
-// eslint-disable-next-line no-unused-vars
 export function boyerMooreSearch(text, pattern) {
-  // TODO: implement Boyer-Moore search with preprocessing tables
-  return { matches: [], comparisons: 0, timeElapsed: 0 };
+  const startTime = performance.now();
+
+  const matches = [];
+  let comparisons = 0;
+
+  const n = text.length;
+  const m = pattern.length;
+
+  // Edge cases
+  if (m === 0 || n === 0 || m > n) {
+    const timeElapsed = performance.now() - startTime;
+    return { matches, comparisons, timeElapsed };
+  }
+
+  // Bad character table
+  const badChar = new Map();
+  for (let i = 0; i < m; i += 1) {
+    badChar.set(pattern[i], i);
+  }
+
+  // Good suffix preprocessing
+  const suffix = new Array(m).fill(-1);
+  const prefix = new Array(m).fill(false);
+
+  const buildGoodSuffix = () => {
+    for (let i = 0; i < m - 1; i += 1) {
+      let j = i;
+      let k = 0; // length of the matching suffix
+      while (j >= 0 && pattern[j] === pattern[m - 1 - k]) {
+        comparisons += 1;
+        j -= 1;
+        k += 1;
+        suffix[k] = j + 1;
+      }
+      if (j >= 0) comparisons += 1; // for the mismatching comparison
+      if (j === -1) prefix[k] = true;
+    }
+  };
+
+  const moveByGoodSuffix = (badIndex) => {
+    const k = m - 1 - badIndex; // length of good suffix
+    if (k <= 0) return 0;
+    if (suffix[k] !== -1) return badIndex + 1 - suffix[k];
+    
+    for (let r = badIndex + 2; r <= m - 1; r += 1) {
+      if (prefix[m - r]) return r;
+    }
+    return m;
+  };
+
+  buildGoodSuffix();
+
+  // ---------- Main search loop ----------
+  let i = 0; // alignment start in text
+  while (i <= n - m) {
+    let j = m - 1; // index in pattern
+
+    while (j >= 0) {
+      comparisons += 1;
+      if (text[i + j] === pattern[j]) j -= 1;
+      else break;
+    }
+
+    if (j < 0) {
+      // Match found
+      matches.push(i);
+      // Shift by 1 to find overlapping patterns
+      i += 1;
+    } else {
+      // Bad character rule
+      const bcIndex = badChar.has(text[i + j]) ? badChar.get(text[i + j]) : -1;
+      const badCharShift = j - bcIndex;
+
+      // Good suffix rule
+      const goodSuffixShift = moveByGoodSuffix(j);
+
+      const shift = Math.max(1, Math.max(badCharShift, goodSuffixShift));
+      i += shift;
+    }
+  }
+
+  const timeElapsed = performance.now() - startTime;
+  return { matches, comparisons, timeElapsed };
 }
 
 /**
