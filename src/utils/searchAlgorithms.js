@@ -21,7 +21,6 @@
  * - Push each start index where a full match is found into `matches`.
  * - Measure execution time with performance.now() before/after your logic.
  */
-// eslint-disable-next-line no-unused-vars
 export function bruteForceSearch(text, pattern) {
   const startTime = performance.now();
   
@@ -169,7 +168,6 @@ export function boyerMooreSearch(text, pattern) {
  * - Push each starting index of a full match into `matches`.
  * - Use performance.now() to capture elapsed time.
  */
-// eslint-disable-next-line no-unused-vars
 export function kmpSearch(text, pattern) {
   const haystack = text;
   const needle = pattern;
